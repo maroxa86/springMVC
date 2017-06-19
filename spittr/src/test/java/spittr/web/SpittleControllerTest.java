@@ -1,7 +1,6 @@
 package spittr.web;
 
 import static org.hamcrest.CoreMatchers.hasItems;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -22,7 +21,6 @@ import spittr.data.SpittleRepository;
 
 public class SpittleControllerTest {
 
-
 	@Test
 	public void shouldShowRecentSpittles() throws Exception{
 		List<Spittle> expectedSpittles = createSpittleList(20);
@@ -41,6 +39,38 @@ public class SpittleControllerTest {
 				.andExpect(model().attribute("spittleList", hasItems(expectedSpittles.toArray())));
 	}
 
+	@Test
+	public void shouldShowPagedSpittles() throws Exception{
+		List<Spittle> expectedSpittles = createSpittleList(50);
+		
+		SpittleRepository mockRepository = mock(SpittleRepository.class);
+		when(mockRepository.findSpittles(238900, 50)).thenReturn(expectedSpittles);
+		
+		SpittleController controller = new SpittleController(mockRepository);
+		MockMvc mockMvc = standaloneSetup(controller).setSingleView(new InternalResourceView("/WEB-INF/views/spittles.jsp")).build();
+		
+		mockMvc.perform(get("/spittles?max=238900&count=50"))
+		.andExpect(view().name("spittles"))
+		.andExpect(model().attributeExists("spittleList"))
+		.andExpect(model().attribute("spittleList", hasItems(expectedSpittles.toArray())));
+	}
+	
+	@Test
+	public void testSpittle() throws Exception{
+		Spittle expectedSpittle = new Spittle("Hello", new Date());
+		
+		SpittleRepository mockRepository = mock(SpittleRepository.class);
+		when(mockRepository.findOne(12345)).thenReturn(expectedSpittle);
+		
+		SpittleController controller = new SpittleController(mockRepository);
+		MockMvc mockMvc = standaloneSetup(controller).setSingleView(new InternalResourceView("/WEB-INF/views/spittles.jsp")).build();
+		
+		mockMvc.perform(get("/spittles/12345"))
+		.andExpect(view().name("spittles"))
+		.andExpect(model().attributeExists("spittle"))
+		.andExpect(model().attribute("spittle",expectedSpittle));
+	}
+	
 	private List<Spittle> createSpittleList(int count) {
 		List<Spittle> spittles = new ArrayList<>();
 		for(int i = 0; i < count; i++){
