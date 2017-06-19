@@ -66,7 +66,7 @@ public class SpittleControllerTest {
 		MockMvc mockMvc = standaloneSetup(controller).setSingleView(new InternalResourceView("/WEB-INF/views/spittles.jsp")).build();
 		
 		mockMvc.perform(get("/spittles/12345"))
-		.andExpect(view().name("spittles"))
+		.andExpect(view().name("spittle"))
 		.andExpect(model().attributeExists("spittle"))
 		.andExpect(model().attribute("spittle",expectedSpittle));
 	}
