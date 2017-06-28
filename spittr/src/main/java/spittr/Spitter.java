@@ -14,7 +14,7 @@ public class Spitter {
   @NotNull
   @Size(min=5, max=16, message="{username.size}")
   private String username;
-  
+
   @NotNull
   @Size(min=5, max=25, message="{password.size}")
   private String password;
@@ -22,13 +22,13 @@ public class Spitter {
   @NotNull
   @Size(min=2, max=30, message="{firstName.size}")
   private String firstName;
-  
+
   @NotNull
   @Size(min=2, max=30, message="{lastName.size}")
   private String lastName;
   
   @NotNull
-  @Email(message="{email.valid}")
+  @Email
   private String email;
 
   public Spitter() {}
@@ -89,7 +89,6 @@ public class Spitter {
   public String getEmail() {
     return email;
   }
-  
   public void setEmail(String email) {
     this.email = email;
   }
