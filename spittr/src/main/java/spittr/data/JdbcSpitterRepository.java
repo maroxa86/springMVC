@@ -21,13 +21,14 @@ public class JdbcSpitterRepository implements SpitterRepository {
 	}
 
 	public Spitter save(Spitter spitter) {
-		jdbc.update(
+		int id = jdbc.update(
 				"insert into Spitter (username, password, first_name, last_name, email) values (?, ?, ?, ?, ?)",
 				spitter.getUsername(),
 				spitter.getPassword(),
 				spitter.getFirstName(),
 				spitter.getLastName(),
 				spitter.getEmail());
+		spitter.setId(new Long(id));
 		return spitter; // TODO: Determine value for id
 	}
 

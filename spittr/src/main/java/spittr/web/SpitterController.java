@@ -14,7 +14,6 @@ import org.springframework.ui.Model;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.multipart.MultipartFile;
 
 import spittr.Spitter;
@@ -40,6 +39,7 @@ public class SpitterController {
   @RequestMapping(value="/register", method=POST)
   public String processRegistration(
 		 @Valid SpitterForm spitterForm, 
+		 Model model,
 		 Errors errors) throws IllegalStateException, IOException {
     if (errors.hasErrors()) {
       return "registerForm";
@@ -47,8 +47,12 @@ public class SpitterController {
     
     MultipartFile profilePicture = spitterForm.getProfilePicture();
     profilePicture.transferTo(new File(profilePicture.getOriginalFilename()));
-    spitterRepository.save(spitterForm.toSpitter());
-    return "redirect:/spitter/" + spitterForm.getUsername();
+    Spitter spitter = spitterRepository.save(spitterForm.toSpitter());
+    //Forma parte de la URL de redirección
+    model.addAttribute("username", spitter.getUsername());
+    //No forma parte de la URL de la redirección pero aparece en ella en forma de parametro en la petición GET
+    model.addAttribute("spitterId", spitter.getId());
+    return "redirect:/spitter/{username}";
   }
   
   @RequestMapping(value="/{username}", method=GET)
