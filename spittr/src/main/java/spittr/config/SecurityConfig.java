@@ -17,7 +17,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.authorizeRequests()
 				.antMatchers("/spitters/me").authenticated()
 				.antMatchers(HttpMethod.POST, "/spittles").authenticated()
-				.anyRequest().permitAll();
+				.anyRequest().permitAll()
+			.and()
+				.requiresChannel()
+					.antMatchers("/spitter/form").requiresSecure()
+					.antMatchers("/").requiresInsecure();
 	}
 	
 	@Override
