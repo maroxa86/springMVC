@@ -14,6 +14,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
 		http
+			.formLogin()
+				.loginPage("/login")
+			.and()
+			.httpBasic()
+			.and()
 			.authorizeRequests()
 				.antMatchers("/spitters/me").authenticated()
 				.antMatchers(HttpMethod.POST, "/spittles").authenticated()
