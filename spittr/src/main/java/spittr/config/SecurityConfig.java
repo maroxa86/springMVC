@@ -19,6 +19,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 			.and()
 			.httpBasic()
 			.and()
+			.rememberMe() 
+				.tokenValiditySeconds(2419200) //Tiempo valida de la sessión activa. Ej 4 semanas
+				.key("spittrKey") //Clave privada para comprobar los datos de la cookie con la sessión
+			.and()
 			.authorizeRequests()
 				.antMatchers("/spitters/me").authenticated()
 				.antMatchers(HttpMethod.POST, "/spittles").authenticated()
