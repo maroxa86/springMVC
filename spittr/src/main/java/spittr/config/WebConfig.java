@@ -13,6 +13,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 import org.springframework.web.servlet.resource.PathResourceResolver;
+import org.thymeleaf.extras.springsecurity4.dialect.SpringSecurityDialect;
 import org.thymeleaf.spring4.SpringTemplateEngine;
 import org.thymeleaf.spring4.view.ThymeleafViewResolver;
 import org.thymeleaf.templateresolver.ServletContextTemplateResolver;
@@ -24,26 +25,28 @@ import org.thymeleaf.templateresolver.TemplateResolver;
 public class WebConfig extends WebMvcConfigurerAdapter {
 
 	@Bean
-	  public ViewResolver viewResolver(SpringTemplateEngine templateEngine) {
-	    ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
-	    viewResolver.setTemplateEngine(templateEngine);
-	    return viewResolver;
-	  }
-	  @Bean
-	  public SpringTemplateEngine templateEngine(TemplateResolver templateResolver) {
-	    SpringTemplateEngine templateEngine = new SpringTemplateEngine();
-	    templateEngine.setTemplateResolver(templateResolver);
-	    return templateEngine;
-	  }
+	public ViewResolver viewResolver(SpringTemplateEngine templateEngine) {
+		ThymeleafViewResolver viewResolver = new ThymeleafViewResolver();
+		viewResolver.setTemplateEngine(templateEngine);
+		return viewResolver;
+	}
 
-	  @Bean
-	  public TemplateResolver templateResolver() {
-	    TemplateResolver templateResolver = new ServletContextTemplateResolver();
-	    templateResolver.setPrefix("/WEB-INF/views/");
-	    templateResolver.setSuffix(".html");
-	    templateResolver.setTemplateMode("HTML5");
-	    return templateResolver;
-	  }
+	@Bean
+	public SpringTemplateEngine templateEngine(TemplateResolver templateResolver) {
+		SpringTemplateEngine templateEngine = new SpringTemplateEngine();
+		templateEngine.setTemplateResolver(templateResolver);
+		templateEngine.setDialect(new SpringSecurityDialect());
+		return templateEngine;
+	}
+
+	@Bean
+	public TemplateResolver templateResolver() {
+		TemplateResolver templateResolver = new ServletContextTemplateResolver();
+		templateResolver.setPrefix("/WEB-INF/views/");
+		templateResolver.setSuffix(".html");
+		templateResolver.setTemplateMode("HTML5");
+		return templateResolver;
+	}
 
 	@Override
 	public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
@@ -52,12 +55,8 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 
 	@Override
 	public void addResourceHandlers(ResourceHandlerRegistry registry) {
-		registry
-			.addResourceHandler("/resources/**")
-			.addResourceLocations("/resources/", "/other-resources/")
-			.setCachePeriod(5)
-			.resourceChain(true)
-			.addResolver(new PathResourceResolver());
+		registry.addResourceHandler("/resources/**").addResourceLocations("/resources/", "/other-resources/")
+				.setCachePeriod(5).resourceChain(true).addResolver(new PathResourceResolver());
 	}
 
 	@Bean
@@ -67,9 +66,9 @@ public class WebConfig extends WebMvcConfigurerAdapter {
 		messageSource.setCacheSeconds(10);
 		return messageSource;
 	}
-	
+
 	@Bean
-	public MultipartResolver multipartResolver(){
+	public MultipartResolver multipartResolver() {
 		return new StandardServletMultipartResolver();
 	}
 }
