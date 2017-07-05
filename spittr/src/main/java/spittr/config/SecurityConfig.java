@@ -16,7 +16,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	DataSource dataSource;
-	
+
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth
@@ -26,9 +26,24 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 				.groupSearchBase("ou=groups")
 				.groupSearchFilter("member={0}")
 				.contextSource()
-					.url("ldap://habuma.com:389/dc=habuma,dc=com");
+					.root("dc=habuma, dc=com");
 	}
 	
+	
+	//Configuración autentificación LDAP Remoto
+//	@Override
+//	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+//		auth
+//			.ldapAuthentication()
+//				.userSearchBase("ou=people")
+//				.userSearchFilter("(uid={0}")
+//				.groupSearchBase("ou=groups")
+//				.groupSearchFilter("member={0}")
+//				.contextSource()
+//					.url("ldap://habuma.com:389/dc=habuma,dc=com");
+//	}
+	
+	//Configuració autentificación por BBDD
 //	@Override
 //	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 //		auth.jdbcAuthentication()
