@@ -2,24 +2,22 @@ package spittr.config;
 
 import javax.sql.DataSource;
 
-import org.apache.commons.dbcp2.BasicDataSource;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcOperations;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
+import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
 
 @Configuration
 public class DataConfig {
 
 	@Bean
-	public BasicDataSource dataSource(){
-		BasicDataSource ds = new BasicDataSource();
-		ds.setDriverClassName("org.h2.Driver");
-		ds.setUrl("jdbc:h2:tcp://localhost/~/spitter");
-		ds.setUsername("sa");
-		ds.setPassword(" ");
-		ds.setInitialSize(5);
-		return ds;
+	public DataSource dataSource(){
+		EmbeddedDatabaseBuilder edb = new EmbeddedDatabaseBuilder();
+		edb.setType(EmbeddedDatabaseType.H2);
+		edb.addScript("classpath:schema.sql");
+		return edb.build();
 	}
 	
 	@Bean
